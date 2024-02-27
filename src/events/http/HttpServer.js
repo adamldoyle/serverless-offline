@@ -323,9 +323,10 @@ export default class HttpServer {
       authFunctionName = serverlessAuthorizerOptions.functionName
     }
 
-    const mockedResponse = env.AUTHORIZER !== undefined;
+    const mockedResponse = env.AUTHORIZER !== undefined
     if (!mockedResponse) {
-      const authFunction = this.#serverless.service.getFunction(authFunctionName)
+      const authFunction =
+        this.#serverless.service.getFunction(authFunctionName)
 
       if (!authFunction) {
         log.error(`Authorization function ${authFunctionName} does not exist`)
