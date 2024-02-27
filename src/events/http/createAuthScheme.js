@@ -169,11 +169,14 @@ export default function createAuthScheme(authorizerOptions, provider, lambda) {
           type: authorizerOptions.type === "request" ? "REQUEST" : "TOKEN",
         }
 
-        const lambdaFunction = lambda.get(authFunName)
-        lambdaFunction.setEvent(event)
+        let lambdaFunction;
+        if (!env.AUTHORIZER) {
+          lambdaFunction = lambda.get(authFunName)
+          lambdaFunction.setEvent(event)
+        }
 
         try {
-          const result = await lambdaFunction.runHandler()
+          const result = env.AUTHORIZER ? JSON.parse(env.AUTHORIZER) : await lambdaFunction.runHandler()
 
           if (authorizerOptions.enableSimpleResponses) {
             if (result.isAuthorized) {
