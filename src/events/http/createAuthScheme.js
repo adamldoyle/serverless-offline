@@ -1,4 +1,5 @@
 import Boom from "@hapi/boom"
+import { env } from "node:process"
 import { log } from "@serverless/utils/log.js"
 import authCanExecuteResource from "../authCanExecuteResource.js"
 import authValidateContext from "../authValidateContext.js"
