@@ -2,7 +2,7 @@ import { Buffer } from "node:buffer"
 import { readFile } from "node:fs/promises"
 import { createRequire } from "node:module"
 import { join, resolve } from "node:path"
-import { exit } from "node:process"
+import { env, exit } from "node:process"
 import h2o2 from "@hapi/h2o2"
 import { Server } from "@hapi/hapi"
 import { log } from "@serverless/utils/log.js"
@@ -323,11 +323,14 @@ export default class HttpServer {
       authFunctionName = serverlessAuthorizerOptions.functionName
     }
 
-    const authFunction = this.#serverless.service.getFunction(authFunctionName)
+    const mockedResponse = env.AUTHORIZER !== undefined;
+    if (!mockedResponse) {
+      const authFunction = this.#serverless.service.getFunction(authFunctionName)
 
-    if (!authFunction) {
-      log.error(`Authorization function ${authFunctionName} does not exist`)
-      return null
+      if (!authFunction) {
+        log.error(`Authorization function ${authFunctionName} does not exist`)
+        return null
+      }
     }
 
     const authorizerOptions = {
